@@ -1,0 +1,119 @@
+<div class="bg-gray-100 p-6">
+    <div class="flex items-center justify-center h-16">
+        <span class="text-black font-bold uppercase">Panel de administracion de clientes</span>
+    </div>
+    <!-- Botón para agregar -->
+    <div class="flex justify-between items-center mb-6">
+        <button id="addButton" class="bg-indigo-500 text-white px-4 py-2 rounded" (click)="openModal()">Agregar</button>
+    </div>
+    <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (keyup)="filtrarClientes()"
+        class="border border-gray-300 px-4 py-2 w-2/5 rounded">
+    <!-- Tabla -->
+    <div class="pt-5"></div>
+    <div class="bg-white shadow rounded-lg overflow-hidden h-[700px]">
+        <div class="overflow-auto">
+            <table class="min-w-full leading-normal">
+                <thead>
+                    <tr>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Cedula</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Nombre</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Apellido</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Correo</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Direccion</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Estado</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Tipo</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let cliente of clientes | paginate: { itemsPerPage: pageSize, currentPage: page }"
+                        [attr.data-id]="cliente.id">
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ cliente.cedula }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ cliente.nombre }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ cliente.apellido }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ cliente.correo }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ cliente.direccion }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ cliente.estado }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ cliente.tipo }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <button class="bg-blue-500 text-white px-2 py-1 rounded"
+                                (click)="cargarCliente(cliente)">Editar</button>
+                            <button class="bg-red-500 text-white px-2 py-1 rounded"
+                                (click)="eliminarCliente(cliente)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+
+
+    <!-- Modal -->
+    <div *ngIf="showModal" id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-1/4">
+            <h2 class="text-2xl mb-4">Datos del cliente</h2>
+            <form (submit)="onSubmit()">
+                <div class="mb-4">
+                    <label class="block text-gray-700">Cedula</label>
+                    <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded" placeholder="Cedula"
+                        name="cedula" [(ngModel)]="cliente.cedula">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Nombre</label>
+                    <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded" placeholder="Nombre"
+                        name="nombre" [(ngModel)]="cliente.nombre">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Apellido</label>
+                    <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded" placeholder="Apellido"
+                        name="apellido" [(ngModel)]="cliente.apellido">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Correo Electrónico</label>
+                    <input type="email" class="w-full border border-gray-300 px-4 py-2 rounded" name="correo"
+                        placeholder="Correo Electrónico" [(ngModel)]="cliente.correo">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700">Dirección</label>
+                    <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded" placeholder="Dirección"
+                        name="direccion" [(ngModel)]="cliente.direccion">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Estado</label>
+                    <input type="tel" class="w-full border border-gray-300 px-4 py-2 rounded" placeholder="Estado"
+                        name="estado" [(ngModel)]="cliente.estado">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Tipo</label>
+                    <input type="tel" class="w-full border border-gray-300 px-4 py-2 rounded" placeholder="Tipo"
+                        name="tipo" [(ngModel)]="cliente.tipo">
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" id="closeModal" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
+                        (click)="closeModal()">Cancelar</button>
+                    <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

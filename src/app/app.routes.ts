@@ -3,6 +3,12 @@ import { LoginComponent } from './components/login/login.component';
 import { PrincipalComponent } from './components/principal/principal.component';
 import { RecuperarComponent } from './components/recuperar/recuperar.component';
 import { RegistroComponent } from './components/registro/registro.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ClientesComponent } from './components/clientes/clientes.component';
+import { MenusComponent } from './components/menus/menus.component';
+import { MesasComponent } from './components/mesas/mesas.component';
+import { PedidosComponent } from './components/pedidos/pedidos.component';
+import { ReservasComponent } from './components/reservas/reservas.component';
 
 export const routes: Routes = [
     {
@@ -16,10 +22,19 @@ export const routes: Routes = [
     {
         path: 'registro',
         component: RegistroComponent
+
     },
     {
         path: 'home',
         component: PrincipalComponent,
+        children: [
+            { path: 'dashboard', component: DashboardComponent },
+            { path: 'clientes', component: ClientesComponent },
+            { path: 'menus', component: MenusComponent },
+            { path: 'mesas', component: MesasComponent },
+            { path: 'pedidos', component: PedidosComponent },
+            { path: 'reservas', component: ReservasComponent },
+        ]
 
     },
     {

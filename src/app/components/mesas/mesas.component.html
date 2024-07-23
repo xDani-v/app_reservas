@@ -1,0 +1,101 @@
+<div class="bg-gray-100 p-6">
+    <div class="flex items-center justify-center h-16">
+        <span class="text-black font-bold uppercase">Panel de administracion de mesas</span>
+    </div>
+    <!-- Botón para agregar -->
+    <div class="flex justify-between items-center mb-6">
+        <button id="addButton" class="bg-indigo-500 text-white px-4 py-2 rounded" (click)="openModal()">Agregar</button>
+    </div>
+    <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (keyup)="filtrar()"
+        class="border border-gray-300 px-4 py-2 w-2/5 rounded">
+    <!-- Tabla -->
+    <div class="pt-5"></div>
+    <div class="bg-white shadow rounded-lg overflow-hidden h-[700px]">
+        <div class="overflow-auto">
+            <table class="min-w-full leading-normal">
+                <thead>
+                    <tr>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Numero</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Ubicacion</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Capacidad</th>
+
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Estado</th>
+
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let mesa of mesas | paginate: { itemsPerPage: pageSize, currentPage: page }"
+                        [attr.data-id]="mesa.id">
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ mesa.numero }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ mesa.ubicacion }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ mesa.capacidad }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ mesa.estado }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <button class="bg-blue-500 text-white px-2 py-1 rounded"
+                                (click)="cargar(mesa)">Editar</button>
+                            <button class="bg-red-500 text-white px-2 py-1 rounded"
+                                (click)="eliminar(mesa)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+
+
+    <!-- Modal -->
+    <div *ngIf="showModal" id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-1/4">
+            <h2 class="text-2xl mb-4">Datos del mesa</h2>
+            <form (submit)="onSubmit()">
+
+                <div class="mb-4">
+                    <label class="block text-gray-700">Numero</label>
+                    <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded" placeholder="Numero"
+                        name="numero" [(ngModel)]="mesa.numero">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Ubicacion</label>
+                    <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded" placeholder="Ubicacion"
+                        name="ubicacion" [(ngModel)]="mesa.ubicacion">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Capacidad</label>
+                    <input type="number" class="w-full border border-gray-300 px-4 py-2 rounded" name="Capacidad"
+                        placeholder="capacidad" [(ngModel)]="mesa.capacidad">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700">Estado</label>
+                    <select class="w-full border border-gray-300 px-4 py-2 rounded" name="estado"
+                        [(ngModel)]="mesa.estado">
+                        <option value="">Seleccione un estado</option>
+                        <option value="disponible">Disponible</option>
+                        <option value="ocupado">Ocupado</option>
+                        <option value="reservado">Reservado</option>
+                        <option value="fuera_de_servicio">Fuera de Servicio</option>
+                    </select>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" id="closeModal" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
+                        (click)="closeModal()">Cancelar</button>
+                    <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

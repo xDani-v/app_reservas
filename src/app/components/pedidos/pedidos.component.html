@@ -1,0 +1,117 @@
+<div class="bg-gray-100 p-6">
+    <div class="flex items-center justify-center h-16">
+        <span class="text-black font-bold uppercase">Panel de administracion de pedidos</span>
+    </div>
+    <!-- Botón para agregar -->
+    <div class="flex justify-between items-center mb-6">
+        <button id="addButton" class="bg-indigo-500 text-white px-4 py-2 rounded" (click)="openModal()">Agregar</button>
+    </div>
+    <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (keyup)="filtrar()"
+        class="border border-gray-300 px-4 py-2 w-2/5 rounded">
+    <!-- Tabla -->
+    <div class="pt-5"></div>
+    <div class="bg-white shadow rounded-lg overflow-hidden h-[700px]">
+        <div class="overflow-auto">
+            <table class="min-w-full leading-normal">
+                <thead>
+                    <tr>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            pedido</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Menu</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Cantidad</th>
+
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Subtotal</th>
+
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Estado</th>
+
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pedido of pedidos | paginate: { itemsPerPage: pageSize, currentPage: page }"
+                        [attr.data-id]="pedido.id">
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ pedido.id_pedido }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ pedido.id_menu }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ pedido.cantidad }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ pedido.subtotal }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ pedido.estado }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <button class="bg-blue-500 text-white px-2 py-1 rounded"
+                                (click)="cargar(pedido)">Editar</button>
+                            <button class="bg-red-500 text-white px-2 py-1 rounded"
+                                (click)="eliminar(pedido)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+
+
+    <!-- Modal -->
+    <div *ngIf="showModal" id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-1/4">
+            <h2 class="text-2xl mb-4">Datos del pedido</h2>
+            <form (submit)="onSubmit()">
+
+                <div class="mb-4">
+                    <label class="block text-gray-700">Reserva</label>
+                    <select id="empleado" [(ngModel)]="pedido.id_reserva" name="id_reserva"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        required>
+                        <option *ngFor="let reserva of reservas" [value]="reserva.id">{{ reserva.id_mesa + '[' +
+                            reserva.hora_inicio + ' ' + reserva.hora_fin + ']' }}
+                        </option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Menu</label>
+                    <select id="menu" [(ngModel)]="pedido.id_menu" name="id_menu"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                        <optgroup *ngFor="let categoria of categorias" label="{{categoria}}">
+                            <option *ngFor="let menu of menus[categoria]" [value]="menu.id">
+                                {{ menu.nombre + ' - ' + menu.precio + '€' }}
+                            </option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="mb-4">
+
+                    <label class="block text-gray-700">Cantidad</label>
+                    <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded"
+                        placeholder="Cantidad de ordenes del pedido" name="cantidad" [(ngModel)]="pedido.cantidad">
+
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Estado</label>
+                    <select class="w-full border border-gray-300 px-4 py-2 rounded" name="estado"
+                        [(ngModel)]="pedido.estado">
+                        <option value="">Seleccione un estado</option>
+                        <option value="enviado">Enviado</option>
+                        <option value="cancelado">Cancelado</option>
+
+                    </select>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" id="closeModal" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
+                        (click)="closeModal()">Cancelar</button>
+                    <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,147 @@
+<div class="bg-gray-100 p-6">
+    <div class="flex items-center justify-center h-16">
+        <span class="text-black font-bold uppercase">Panel de administracion de reservas</span>
+    </div>
+    <!-- Botón para agregar -->
+    <div class="flex justify-between items-center mb-6">
+        <button id="addButton" class="bg-indigo-500 text-white px-4 py-2 rounded" (click)="openModal()">Agregar</button>
+    </div>
+    <input type="text" placeholder="Buscar..." [(ngModel)]="searchTerm" (keyup)="filtrar()"
+        class="border border-gray-300 px-4 py-2 w-2/5 rounded">
+    <!-- Tabla -->
+    <div class="pt-5"></div>
+    <div class="bg-white shadow rounded-lg overflow-hidden h-[700px]">
+        <div class="overflow-auto">
+            <table class="min-w-full leading-normal">
+                <thead>
+                    <tr>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Cliente</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Mesa</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Fecha reserva</th>
+
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Hora inicio</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Hora Fin</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Personas</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Estado</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Total</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let reserva of reservas | paginate: { itemsPerPage: pageSize, currentPage: page }"
+                        [attr.data-id]="reserva.id">
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.id_cliente }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.id_mesa }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.fecha_reserva }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.hora_inicio }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.hora_fin }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.numero_personas }}
+                        </td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.estado }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.total }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <button class="bg-blue-500 text-white px-2 py-1 rounded"
+                                (click)="cargar(reserva)">Editar</button>
+                            <button class="bg-red-500 text-white px-2 py-1 rounded"
+                                (click)="eliminar(reserva)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+
+
+    <!-- Modal -->
+    <div *ngIf="showModal" id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-1/4">
+            <h2 class="text-2xl mb-4">Datos del reserva</h2>
+            <form (submit)="onSubmit()">
+
+                <div class="mb-4">
+                    <label class="block text-gray-700">Cliente</label>
+
+
+                    <select id="empleado" [(ngModel)]="reserva.id_cliente" name="id_cliente"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        required>
+                        <option *ngFor="let cliente of clientes" [value]="cliente.id">{{ cliente.cedula + '[' +
+                            cliente.nombre + ' ' + cliente.apellido + ']' }}
+                        </option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Mesa</label>
+                    <select id="empleado" [(ngModel)]="reserva.id_mesa" name="id_cliente"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        required>
+                        <option *ngFor="let mesa of mesasd" [value]="mesa.id">{{ mesa.numero + '[' +
+                            mesa.ubicacion + '--' + mesa.capacidad + ']' }}
+                        </option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Fecha Reserva</label>
+                    <input type="date" class="w-full border border-gray-300 px-4 py-2 rounded"
+                        placeholder="Fecha Reserva" name="fecha_reserva" [(ngModel)]="reserva.fecha_reserva">
+                </div>
+                <div class="mb-10 flex">
+                    <div>
+                        <label class="block text-gray-700">Hora Inicio</label>
+                        <input type="time" class="w-full border border-gray-300 px-4 py-2 rounded" placeholder="HH:MM"
+                            name="hora_inicio" [(ngModel)]="reserva.hora_inicio">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Hora Fin</label>
+                        <input type="time" class="w-full border border-gray-300 px-4 py-2 rounded" placeholder="HH:MM"
+                            name="hora_inicio" [(ngModel)]="reserva.hora_fin">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Número de Personas</label>
+                        <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded"
+                            placeholder="Número de Personas" name="numero_personas"
+                            [(ngModel)]="reserva.numero_personas">
+                    </div>
+                </div>
+
+
+                <div class="mb-4">
+                    <label class="block text-gray-700">Estado</label>
+                    <select class="w-full border border-gray-300 px-4 py-2 rounded" name="estado"
+                        [(ngModel)]="reserva.estado">
+                        <option value="">Seleccione un estado</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="anulado">Anulado</option>
+                        <option value="pagado">Pagado</option>
+                    </select>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" id="closeModal" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
+                        (click)="closeModal()">Cancelar</button>
+                    <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
