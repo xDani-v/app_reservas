@@ -27,7 +27,7 @@ export class MesasComponent {
   mesa: any = {};
   mesas: any[] = [];
   page: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 9;
 
   searchTerm: string = '';
 

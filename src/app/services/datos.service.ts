@@ -13,6 +13,7 @@ export class DatosService {
   private apiUrlMesa = 'http://localhost:3000/api/mesas/';
   private apiUrlReserva = 'http://localhost:3000/api/reservas/';
   private apiUrlPedido = 'http://localhost:3000/api/pedidos/';
+  private apiConsultas = 'http://localhost:3000/api/consultas/';
 
   constructor(private http: HttpClient) { }
 
@@ -101,5 +102,15 @@ export class DatosService {
 
   eliminarPedido(id: number): Observable<any> {
     return this.http.delete<any>(this.apiUrlPedido + id);
+  }
+  //consultas
+  creservas(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiConsultas + 'reservas');
+  }
+  cmenus(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiConsultas + 'menus');
+  }
+  cgastos(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiConsultas + 'gasto');
   }
 }

@@ -1,1 +1,32 @@
-<p>dashboard works!</p>
+<div class="bg-gray-100 p-6">
+    <div class="flex items-center justify-center h-16 mb-4">
+        <span class="text-black font-bold uppercase">Panel de administración de Menús</span>
+    </div>
+    <div class="flex flex-wrap justify-center gap-4">
+        <!-- Gráfico de Barras -->
+        <div class="w-full md:w-1/3 p-2 h-72">
+            <label class="block text-black text-sm font-bold mb-2">Clientes con más reservas</label>
+            <div class="h-full">
+                <canvas baseChart [options]="barChartOptions" [type]="barChartType" [datasets]="barChartData.datasets"
+                    [labels]="barChartData.labels" [legend]="barChartLegend"></canvas>
+            </div>
+        </div>
+        <!-- Gráfico de Pastel -->
+        <div class="w-full md:w-1/3 p-2 h-72">
+            <label class="block text-black text-sm font-bold mb-2">Items del menú más pedidos</label>
+            <div class="h-full">
+                <canvas baseChart [options]="pieChartOptions" [type]="pieChartType" [data]="pieChartData"
+                    [legend]="pieChartLegend"></canvas>
+            </div>
+        </div>
+        <!-- Gráfico de Líneas -->
+        <div class="w-full md:w-1/3 p-2 h-72">
+            <label class="block text-black text-sm font-bold mb-2">Tendencia de reservas</label>
+            <div class="h-full">
+                <canvas baseChart [options]="lineChartOptions" [type]="lineChartType"
+                    [datasets]="lineChartData.datasets" [labels]="lineChartData.labels"
+                    [legend]="lineChartLegend"></canvas>
+            </div>
+        </div>
+    </div>
+</div>

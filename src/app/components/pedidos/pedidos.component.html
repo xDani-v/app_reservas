@@ -17,7 +17,7 @@
                     <tr>
                         <th
                             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                            pedido</th>
+                            Reserva</th>
                         <th
                             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                             Menu</th>
@@ -41,7 +41,7 @@
                 <tbody>
                     <tr *ngFor="let pedido of pedidos | paginate: { itemsPerPage: pageSize, currentPage: page }"
                         [attr.data-id]="pedido.id">
-                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ pedido.id_pedido }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ pedido.id_reserva }}</td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ pedido.id_menu }}</td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ pedido.cantidad }}</td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ pedido.subtotal }}</td>
@@ -84,7 +84,7 @@
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
                         <optgroup *ngFor="let categoria of categorias" label="{{categoria}}">
                             <option *ngFor="let menu of menus[categoria]" [value]="menu.id">
-                                {{ menu.nombre + ' - ' + menu.precio + '€' }}
+                                {{ menu.nombre + ' - ' + menu.precio + ' $' }}
                             </option>
                         </optgroup>
                     </select>

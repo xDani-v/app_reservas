@@ -28,7 +28,7 @@ export class MenusComponent {
   menu: any = {};
   menus: any[] = [];
   page: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 9;
 
   searchTerm: string = '';
 

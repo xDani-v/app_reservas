@@ -30,7 +30,7 @@ export class PedidosComponent {
   categorias: any[] = [];
 
   page: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 9;
 
   searchTerm: string = '';
 
@@ -47,7 +47,7 @@ export class PedidosComponent {
       error: (error) => console.error('Hubo un error al obtener los pedidos:', error)
     });
     this.servicio.obtenerReservas().subscribe({
-      next: (reservas) => this.reservas = reservas.filter(reservas => reservas.estado === 'pendiente'),
+      next: (reservas) => this.reservas = reservas.filter(reservas => reservas.estado === 'confirmada'),
       error: (error) => console.error('Hubo un error al obtener las mesas:', error)
     });
     this.servicio.obtenerMenus().subscribe({

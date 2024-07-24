@@ -28,7 +28,7 @@ export class ClientesComponent {
   cliente: any = {};
   clientes: Cliente[] = [];
   page: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 9;
 
   searchTerm: string = '';
 
