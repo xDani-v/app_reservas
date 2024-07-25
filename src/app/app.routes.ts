@@ -9,6 +9,9 @@ import { MenusComponent } from './components/menus/menus.component';
 import { MesasComponent } from './components/mesas/mesas.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { ReservasComponent } from './components/reservas/reservas.component';
+import { ClienteComponent } from './components/cliente/cliente.component';
+
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -34,12 +37,20 @@ export const routes: Routes = [
             { path: 'mesas', component: MesasComponent },
             { path: 'pedidos', component: PedidosComponent },
             { path: 'reservas', component: ReservasComponent },
-        ]
+        ],
+        //canActivate: [authGuard]
+
+    },
+    {
+        path: 'panel',
+        component: ClienteComponent,
+        //canActivate: [authGuard]
 
     },
     {
         path: '**',
-        component: LoginComponent
+        redirectTo: '/login',
+        pathMatch: 'full'
     },
 
 ];

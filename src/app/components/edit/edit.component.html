@@ -1,0 +1,56 @@
+<button id="addButton" class="bg-indigo-600 text-white px-4 py-2 rounded" (click)="openModal()">Editar datos de la
+    cuenta</button>
+<div class="pt-3"></div>
+<button id="addButton" class="bg-indigo-600 text-white px-4 py-2 rounded" (click)="clearLocalStorage()">Cerrar
+    session</button>
+
+<div *ngIf="showModal" id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-1/4">
+        <h2 class="text-2xl mb-4">Datos de la cuenta</h2>
+        <form (submit)="actualizardatos()">
+            <div>
+                <label for="cedula">Cédula</label>
+                <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded" id="cedula" name="cedula"
+                    [(ngModel)]="cliente.cedula">
+            </div>
+            <div>
+                <label for="nombre">Nombre</label>
+                <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded" id="nombre" name="nombre"
+                    [(ngModel)]="cliente.nombre">
+            </div>
+            <div>
+                <label for="apellido">Apellido</label>
+                <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded" id="apellido" name="apellido"
+                    [(ngModel)]="cliente.apellido">
+            </div>
+            <div>
+                <label for="correo">Correo</label>
+                <input type="email" class="w-full border border-gray-300 px-4 py-2 rounded" id="correo" name="correo"
+                    [(ngModel)]="cliente.correo">
+            </div>
+            <div>
+                <label for="direccion">Dirección</label>
+                <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded" id="direccion"
+                    name="direccion" [(ngModel)]="cliente.direccion">
+            </div>
+            <div>
+                <label for="password">Contraseña</label>
+                <input type="password" class="w-full border border-gray-300 px-4 py-2 rounded" id="password"
+                    name="password" [(ngModel)]="cliente.password">
+            </div>
+            <div>
+                <label for="estado">Estado</label>
+                <select id="estado" name="estado" class="w-full border border-gray-300 px-4 py-2 rounded"
+                    [(ngModel)]="cliente.estado">
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                </select>
+            </div>
+            <div class="flex justify-end">
+                <button type="button" id="closeModal" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
+                    (click)="closeModal()">Cancelar</button>
+                <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>

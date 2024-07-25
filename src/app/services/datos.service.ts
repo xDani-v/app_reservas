@@ -17,6 +17,16 @@ export class DatosService {
 
   constructor(private http: HttpClient) { }
 
+  //login cliente
+  loginCliente(email: string, password: string): Observable<any> {
+    return this.http.post<any>(this.apiUrl + 'login', { email, password });
+  }
+
+  recuperarContrasena(correo: string): Observable<any> {
+    return this.http.post<any>(this.apiUrl + 'recuperar', { correo });
+  }
+
+  //crud cli
   obtenerClientes(): Observable<Cliente[]> {
     return this.http.get<Cliente[]>(this.apiUrl);
   }

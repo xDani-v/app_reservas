@@ -1,0 +1,204 @@
+<div class="flex h-screen bg-gray-100">
+    <!-- Sidebar para acciones del cliente -->
+    <div class="hidden md:flex flex-col w-64 bg-gray-800">
+        <div class="flex flex-col flex-1 overflow-y-auto">
+            <div class="flex-1 px-2 py-4 bg-gray-800">
+                <h2 class="text-xl font-bold mb-4 text-white">Bienvenido {{usuario}}</h2>
+                <button class="w-full bg-indigo-500 text-white px-4 py-2 rounded mb-4" (click)="openModal()">Hacer
+                    Reservación</button>
+                <div class="pt-96"></div>
+                <app-edit></app-edit>
+
+            </div>
+        </div>
+    </div>
+    <!-- Contenido principal -->
+    <div class="flex-1 bg-white p-4">
+        <h2 class="text-xl font-bold mb-4">PANEL DE ADMINISTRACION DE RESERVAS</h2>
+        <div class="pt-5"></div>
+        <div class="bg-white shadow rounded-lg overflow-hidden h-[700px]">
+            <div class="overflow-auto">
+                <table class="min-w-full leading-normal">
+                    <thead>
+                        <tr>
+
+                            <th
+                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Mesa</th>
+                            <th
+                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Fecha reserva</th>
+
+                            <th
+                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Hora inicio</th>
+                            <th
+                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Hora Fin</th>
+                            <th
+                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Personas</th>
+                            <th
+                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Estado</th>
+                            <th
+                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Total</th>
+                            <th
+                                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let reserva of reservas | paginate: { itemsPerPage: pageSize, currentPage: page }"
+                            [attr.data-id]="reserva.id">
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.id_mesa }}</td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.fecha_reserva }}
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.hora_inicio }}
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.hora_fin }}</td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.numero_personas
+                                }}
+                            </td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.estado }}</td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ reserva.total }}</td>
+                            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                <button class="bg-blue-500 text-white px-2 py-1 rounded"
+                                    (click)=" openModalReserva(reserva)">Gestionar pedidos</button>
+                                <button class="bg-red-500 text-white px-2 py-1 rounded"
+                                    (click)="modificar(reserva)">Anular reservacion</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+        <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    </div>
+
+    <div *ngIf="modalReserva" id="modal"
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h2 class="text-2xl mb-4">Pedidos de la reserva</h2>
+            <div class="mb-4">
+                <label class="block text-gray-700">Menu</label>
+                <select id="menu" [(ngModel)]="pedido.id_menu" name="id_menu"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
+                    <optgroup *ngFor="let categoria of categorias" label="{{categoria}}">
+                        <option *ngFor="let menu of menus[categoria]" [value]="menu.id">
+                            {{ menu.nombre +' - ' + menu.descripcion+ ' - ' + menu.precio + ' $' }}
+                        </option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="mb-4">
+
+                <label class="block text-gray-700">Cantidad</label>
+                <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded"
+                    placeholder="Cantidad de ordenes del pedido" name="cantidad" [(ngModel)]="pedido.cantidad">
+
+            </div>
+            <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded" (click)="insertarPedido()">Guardar
+                Pedido</button>
+            <table class="min-w-full leading-normal">
+                <thead>
+                    <tr>
+
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Menu</th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Cantidad</th>
+
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Subtotal</th>
+
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Estado</th>
+
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                            Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let pedido of pedidos | paginate: { itemsPerPage: pageSize, currentPage: page }"
+                        [attr.data-id]="pedido.id">
+
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ getNombreMenu(pedido.id_menu)
+                            }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ pedido.cantidad }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ pedido.subtotal }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ pedido.estado }}</td>
+                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                            <button class="bg-red-500 text-white px-2 py-1 rounded"
+                                (click)="eliminarPedido(pedido)">Cancelar Pedido</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" id="closeModal" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
+                (click)="closeModalReserva()">Cerrar pedidos</button>
+        </div>
+
+    </div>
+
+    <!-- Modal para hacer reservacion -->
+    <div *ngIf="showModal" id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-1/4">
+            <h2 class="text-2xl mb-4">Datos del reserva</h2>
+            <form (submit)="onSubmit()">
+
+
+                <div class="mb-4">
+                    <label class="block text-gray-700">Mesa</label>
+                    <select id="empleado" [(ngModel)]="reserva.id_mesa" name="id_cliente"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        required>
+                        <option *ngFor="let mesa of mesasd" [value]="mesa.id">{{ mesa.numero + '[' +
+                            mesa.ubicacion + '--' + mesa.capacidad + ']' }}
+                        </option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700">Fecha Reserva</label>
+                    <input type="date" class="w-full border border-gray-300 px-4 py-2 rounded"
+                        placeholder="Fecha Reserva" name="fecha_reserva" [(ngModel)]="reserva.fecha_reserva">
+                </div>
+                <div class="mb-10 flex">
+                    <div>
+                        <label class="block text-gray-700">Hora Inicio</label>
+                        <input type="time" class="w-full border border-gray-300 px-4 py-2 rounded" placeholder="HH"
+                            name="hora_inicio" [(ngModel)]="reserva.hora_inicio" (change)="actualizarHoraFin()"
+                            min="07:00" max="21:00" step="3600">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Hora Fin</label>
+                        <input type="time" class="w-full border border-gray-300 px-4 py-2 rounded" placeholder="HH:MM"
+                            name="hora_fin" [(ngModel)]="reserva.hora_fin" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700">Número de Personas</label>
+                        <input type="text" class="w-full border border-gray-300 px-4 py-2 rounded"
+                            placeholder="Número de Personas" name="numero_personas"
+                            [(ngModel)]="reserva.numero_personas">
+                    </div>
+                </div>
+
+
+
+                <div class="flex justify-end">
+                    <button type="button" id="closeModal" class="bg-gray-300 text-gray-700 px-4 py-2 rounded mr-2"
+                        (click)="closeModal()">Cancelar</button>
+                    <button type="submit" class="bg-indigo-500 text-white px-4 py-2 rounded">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
